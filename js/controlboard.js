@@ -22,7 +22,7 @@ var buttons = {}
 function init_controlboard_data(data, from_excel){
   Main_Data = data;
   categorize_subjects();
-  update_all_subject_display(document.getElementById("SubjectDisplay").value);
+  // update_all_subject_display(document.getElementById("SubjectDisplay").value);
 }
 
 function getExcelFile(){
@@ -84,7 +84,7 @@ function downloadJS() {
 
 function changeSubjectBox(how){
   if(initialised === false)return;
-  update_all_subject_display(how);
+  // update_all_subject_display(how);
   // }
   if(how === "edu"){
     for(i in JABEE_Comp){
@@ -128,8 +128,8 @@ function make_box(credit_box, class_name, grade){
               // set_subject_data(this.parentElement.parentElement.name, {"edu":this.value});
             }
             this.parentElement.style.display = "none";
-            update_subject_display(this.parentElement.parentElement.name, k, this.value);
-            update_all_subject_display(k);
+            // update_subject_display(this.parentElement.parentElement.name, k, this.value);
+            // update_all_subject_display(k);
         }
     });
     label.htmlFor = checkbox.id;
