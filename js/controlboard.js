@@ -122,10 +122,10 @@ function make_box(credit_box, class_name, grade){
             prev = this;
             var k = document.getElementById("SubjectDisplay").value;
             if(k === "jabee"){
-              set_subject_data(this.parentElement.parentElement.name, {"jabee":this.value});
+              // set_subject_data(this.parentElement.parentElement.name, {"jabee":this.value});
             }
             else if(k === "edu"){
-              set_subject_data(this.parentElement.parentElement.name, {"edu":this.value});
+              // set_subject_data(this.parentElement.parentElement.name, {"edu":this.value});
             }
             this.parentElement.style.display = "none";
             update_subject_display(this.parentElement.parentElement.name, k, this.value);
