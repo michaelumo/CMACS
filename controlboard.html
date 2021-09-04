@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <link rel="icon" type="image/jpg" href="imgs/icon.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="content-type" charset="utf-8">
+  <title>CMACS</title>
+  <link rel="stylesheet" type="text/css" href="css/dashboard.css">
+  <link rel="stylesheet" type="text/css" href="css/basic.css">
+  <script src="js/jquery-1.9.1.min.js"></script>
+  <script src="js/FileSaver.min.js"></script>
+  <script src="js/xlsx.full.min.js"></script>
+  <script src="js/cmacs_data.js"></script>
+  <script src="js/ee_data.js"></script>
+  <script src="js/a_data.js"></script>
+  <script src="js/m_data.js"></script>
+  <script src="js/c_data.js"></script>
+  <script src="js/controlboard.js"></script>
+  <script src="js/subjects_filter.js"></script>
+  <script src="js/calc_my_credits.js"></script>
+  <script src="js/config.js"></script>
+
+  <style>
+  </style>
+
+</head>
+  <body style="background-color: #fbd4b3">
+    <div class="header">
+      <h1>CMACS Control Board</h1>
+    </div>
+    <p id="Error" style="color: red; display: none;"></p>
+    <div class="loader" id="searching" style="display: none; margin-top: 10px;"></div>
+    <div class="inforow">
+      <div class="box">
+        <select name="Department" id="Department" onchange="display_subjects(this.value);">
+          <option value="default">コース選択</option>
+          <option value="電気電子創造工学">電気電子創造工学コース</option>
+          <option value="建築学">建築学コース</option>
+          <option value="機械工学">機械工学コース</option>
+          <option value="物質工学">物質工学コース</option>
+        </select>
+        <button type="button" class="button" onclick="get_data()" id="SearchButton">検索</button>
+    </div>
+    </div>
+    <div class="box2">
+      <select name="SubjectDisplay" id="SubjectDisplay" onchange="changeSubjectBox(this.value);">
+        <option value="edu">教育プログラム修了要件</option>
+        <option value="jabee">JABEE修了要件</option>
+      </select>
+    </div>
+    <div class="box3">
+      <button type="button" class="button" onclick="downloadExcel()" id="DownloadButton">Excelをダウンロード</button>
+      <button type="button" class="button" onclick="getExcelFile()" id="uploadExcelBtn">Excelをアップロード</button>
+      <button type="button" class="button" onclick="downloadJS()" id="DownloadJSButton">JSをダウンロード</button>
+      <div style='height: 0px;width: 0px; overflow:hidden;'><input type="file" id="uploadExcel" accept=".xls,.xlsx"></input></div>
+    </div>
+    <div class="subjects_area" id = "subjects_area" style="position: absolute; height: 70%; margin-top: 5%; float: left; max-width: 45%;padding-left: 5%; padding-right: 5%;overflow-y: scroll;overflow-x: hidden;">
+    </div>
+    <div class="subjects_area" id = "uncategorized_subjects_area" style="position: absolute; height: 70%; margin-top: 5%; float: right; width: 45%; margin-left: 48%; padding-left: 5%;overflow-y: scroll;overflow-x: hidden;">
+    </div>
+
+  <footer>
+    <p>Copyright © 2020 Michael O. Umenyi</p>
+	</footer>
+  </body>
+</html>

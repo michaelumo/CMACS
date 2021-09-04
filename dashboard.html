@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <link rel="icon" type="image/jpg" href="imgs/icon.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="content-type" charset="utf-8">
+  <title>CMACS</title>
+  <link rel="stylesheet" type="text/css" href="css/dashboard.css">
+  <link rel="stylesheet" type="text/css" href="css/basic.css">
+  <script src="js/jquery-1.9.1.min.js"></script>
+  <script src="js/FileSaver.min.js"></script>
+  <script src="js/xlsx.full.min.js"></script>
+  <script src="js/cmacs_data.js"></script>
+  <script src="js/ee_data.js"></script>
+  <script src="js/a_data.js"></script>
+  <script src="js/m_data.js"></script>
+  <script src="js/c_data.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/calc_my_credits.js"></script>
+  <script src="js/config.js"></script>
+
+  <style>
+  </style>
+
+</head>
+  <body style="background-color: #fbd4b3">
+    <div class="header">
+      <h1>Completion Monitor for Advanced Course Students</h1>
+    </div>
+    <p id="Error" style="color: red; display: none;"></p>
+    <div class="loader" id="searching" style="display: none; margin-top: 10px;"></div>
+    <div class="inforow">
+      <div class="box">
+        <select name="Department" id="Department" onchange="displaySubjects(this.value);">
+          <option value="default">コース選択</option>
+          <option value="電気電子創造工学">電気電子創造工学コース</option>
+          <option value="建築学">建築学コース</option>
+          <option value="機械工学">機械工学コース</option>
+          <option value="物質工学">物質工学コース</option>
+        </select>
+        <!-- <input type="date" id="SelectDate" name="SelectDate"> -->
+        <button type="button" class="button" onclick="onClick()" id="SearchButton">検索</button>
+      </div>
+    </div>
+    <div class="box2">
+      <select name="SubjectDisplay" id="SubjectDisplay" onchange="changeSubjectBox(this.value);">
+        <option value="dep">学年順</option>
+        <option value="spec">JABEE順</option>
+      </select>
+      <div class="row2">
+        TOEICスコア: <input type="number" id="toeic_score"  placeholder="L&R スコア" name="toeic_score" min="0" max="990" onchange="JABEE_E()" style="width: 30%" required autofocus>
+      </div>
+    </div>
+    <div class="box3">
+      <button type="button" class="button" onclick="downloadExcel()" id="DownloadButton">Excelをダウンロード</button>
+      <button type="button" class="button" onclick="getExcelFile()" id="uploadExcelBtn">Excelをアップロード</button>
+      <div style='height: 0px;width: 0px; overflow:hidden;'><input type="file" id="uploadExcel" accept=".xls,.xlsx"></input></div>
+    </div>
+    <div class="subjects_area" id = "subjects_area" style="position: absolute; height: 70%; margin-top: 5%; float: left; max-width: 45%;padding-left: 5%; padding-right: 5%;overflow-y: scroll;overflow-x: hidden;">
+    </div>
+    <div class="chart_area" id = "chart_area" style="position: absolute; height: 70%; margin-top: 5%; float: right; width: 45%; margin-left: 48%; padding-left: 5%;">
+      <!-- <button type="button" class="button" onclick="Calc()" id="CalcButton">計算</button> -->
+      <canvas id="radar-chart" height="250px" style="display:none"></canvas>
+      <div class="column" style="height: auto; min-height: 90%; width: 54%;">
+        JABEE修了要件
+        <div class="row2">
+          <div class="column" style="height: auto; width: 100%;">
+            <div class="col1" style="text-align: left; width: 100%; padding-top: 0;">
+              A. 科学と工学の専門知識(20単位以上かつGPA&#8807;2.0)
+            </div>
+            <div class="col1">
+              <div class="row1">GPA</div>
+              <div class="row1">単位</div>
+            </div>
+            <div class="col2">
+              <div class="row">
+                <div class="progressbar" id="jabee_A_GPA" style="margin-top: 5px;">
+                  <div>0.</div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="progressbar" id="jabee_A_PT" style="margin-top: 5px;">
+                  <div>0.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row2">
+          <canvas id="radar-chart" height="250px" style="display:none"></canvas>
+          <div class="column" style="height: auto; width: 100%;">
+            <div class="col1" style="text-align: left; width: 100%; padding: 0;">
+              B. 問題解決能力とチームワーク(必修科目の評価&#8807;60%)
+            </div>
+            <div class="col1">
+              <div class="row1">修得率</div>
+            </div>
+            <div class="col2">
+              <div class="row">
+                <div class="progressbar" id="jabee_B_PT" style="margin-top: 5px;">
+                  <div>0.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row2">
+          <canvas id="radar-chart" height="250px" style="display:none"></canvas>
+          <div class="column" style="height: auto; width: 100%;">
+            <div class="col1" style="text-align: left; width: 100%; padding: 0;">
+              C. 数学と自然科学(12単位以上かつGPA&#8807;2.0)
+            </div>
+            <div class="col1">
+              <div class="row1">GPA</div>
+              <div class="row1">単位</div>
+            </div>
+            <div class="col2">
+              <div class="row">
+                <div class="progressbar" id="jabee_C_GPA" style="margin-top: 5px;">
+                  <div>0.</div>
+                </div>
+              </div>
+                <div class="row">
+                  <div class="progressbar" id="jabee_C_PT" style="margin-top: 5px;">
+                    <div>0.</div>
+                  </div>
+                </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row2">
+          <canvas id="radar-chart" height="250px" style="display:none"></canvas>
+          <div class="column" style="height: auto; width: 100%;">
+            <div class="col1" style="text-align: left; width: 100%; padding: 0;">
+              D. 技術者倫理(4単位以上かつGPA&#8807;2.0)
+            </div>
+            <div class="col1">
+              <div class="row1">GPA</div>
+              <div class="row1">単位</div>
+            </div>
+            <div class="col2">
+              <div class="row">
+                <div class="progressbar" id="jabee_D_GPA">
+                  <div>0.</div>
+                </div>
+              </div>
+                <div class="row">
+                  <div class="progressbar" id="jabee_D_PT">
+                    <div>0.</div>
+                  </div>
+                </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row2">
+          <canvas id="radar-chart" height="250px" style="display:none"></canvas>
+          <div class="column" style="height: auto; width: 100%;">
+            <div class="col1" style="text-align: left; width: 100%; padding: 0;">
+              E. TOEIC(L&Rスコア&#8807;400)
+            </div>
+            <div class="col1">
+              <div class="row1">L&R</div>
+            </div>
+            <div class="col2">
+              <div class="row">
+                <div class="progressbar" id="jabee_E_PT">
+                  <div>0.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="column" style="height: auato; width: 40%; margin-left: 10px;">
+        教育プログラム修了要件
+        <div class="row2">
+          <div class="column" style="height: auto; min-height: 90%; width: 100%;">
+            <div class="col1" style="text-align: left; width: 100%; padding-top: 0;">
+              1. 専攻科合計単位(62単位以上)
+            </div>
+            <div class="col1">
+              <div class="row1">単位</div>
+            </div>
+            <div class="col2">
+              <div class="row">
+                <div class="progressbar" id="program_1_PT">
+                  <div>0.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row2">
+          <div class="column" style="height: auto; width: 100%;">
+            <div class="col1" style="text-align: left; width: 100%; padding-top: 0;">
+              2. 人文科学・社会科学(10単位以上)
+            </div>
+            <div class="col1">
+              <div class="row1">単位</div>
+            </div>
+            <div class="col2">
+              <div class="row">
+                <div class="progressbar" id="program_2_PT">
+                  <div>0.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row2">
+          <div class="column" style="height: auto; width: 100%;">
+            <div class="col1" style="text-align: left; width: 100%; padding-top: 0;">
+              3. 数学・自然科学・情報技術(10単位以上)
+            </div>
+            <div class="col1">
+              <div class="row1">単位</div>
+            </div>
+            <div class="col2">
+              <div class="row">
+                <div class="progressbar" id="program_3_PT">
+                  <div>0.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="row2">
+          <div class="column" style="height: auto; width: 100%;">
+            <div class="col1" style="text-align: left; width: 100%; padding-top: 0;">
+              4. 専門工学分野(36単位以上)
+            </div>
+            <div class="col1">
+              <div class="row1">単位</div>
+            </div>
+            <div class="col2">
+              <div class="row">
+                <div class="progressbar" id="program_4_PT">
+                  <div>0.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row2">
+          <div class="column" style="height: auto; width: 100%;">
+            <div class="col1" style="text-align: left; width: 100%; padding-top: 0;">
+              5. 基礎工学①〜⑤(それぞれから1科目以上, 計6単位以上)
+            </div>
+            <div class="col1">
+              <div class="row1">単位</div>
+            </div>
+            <div class="col2">
+              <div class="row">
+                <div class="progressbar" id="program_5_PT">
+                  <div>0.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="row2">
+          <div class="column" style="height: auto; width: 100%;">
+            <div class="col1" style="text-align: left; width: 100%; padding-top: 0;">
+              6. 指定の必修6科目(12単位以上)
+            </div>
+            <div class="col1">
+              <div class="row1">単位</div>
+            </div>
+            <div class="col2">
+              <div class="row">
+                <div class="progressbar" id="program_6_PT">
+                  <div>0.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  <footer>
+    <p>Copyright © 2020 Michael O. Umenyi</p>
+	</footer>
+  </body>
+</html>
