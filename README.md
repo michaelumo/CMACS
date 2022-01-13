@@ -18,3 +18,6 @@ Completion Monitor for Advanced Course Students
 - "edu": 教育プログラム修了要件の項目1〜6
 - "gpa": グレードポイントS,A〜D
 - "spec": 人文科学・社会学をA, 数学・自然科学・情報技術をB 〜 専門工学の知識・能力 b,c,dをI
+
+## 使い方
+![pinout](https://github.com/michaelumo/CMACS/blob/main/imgs/cmacs-howto.jpg)
